@@ -31,7 +31,6 @@ public class WeatherModel {
 
     private async Task<List<WeatherConditions?>> GetWeatherConditionsAtLocation (Location resolvedLocation, bool useCahce) {
         var weather = await CacheHelper.GetItemMaybeFromCache (JsonConvert.SerializeObject (resolvedLocation.Coordinate), WeatherConditionsCache, useCahce, TimeSpan.FromMinutes (1), async d => {
-            var loc = JsonConvert.DeserializeObject<GeoCoordinate> (d);
             var getWeatherTasks = WeatherProviders.Select (d => d.GetCurrentWeatherConditions (resolvedLocation.Coordinate)).ToList ();
             try {
                 await Task.WhenAll (getWeatherTasks);
